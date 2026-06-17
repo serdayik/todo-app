@@ -7,8 +7,29 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="app">
-    <h1>📝 Yapılacaklar</h1>
+  <!-- Giriş / Kayıt ekranı -->
+  <div class="app" id="auth-view" hidden>
+    <h1>🔐 Giriş Yap</h1>
+    <form id="auth-form" class="auth-form">
+      <input type="email" id="email" placeholder="E-posta" autocomplete="email" required>
+      <input type="password" id="password" placeholder="Şifre (en az 6 karakter)" autocomplete="current-password" minlength="6" required>
+      <div class="auth-buttons">
+        <button type="submit" data-action="signin">Giriş Yap</button>
+        <button type="button" data-action="signup" class="secondary">Kaydol</button>
+      </div>
+      <p id="auth-msg" class="auth-msg"></p>
+    </form>
+  </div>
+
+  <!-- Uygulama ekranı -->
+  <div class="app" id="app-view" hidden>
+    <div class="topbar">
+      <h1>📝 Yapılacaklar</h1>
+      <div class="user-box">
+        <span id="user-email"></span>
+        <button id="logout" class="link-btn">Çıkış</button>
+      </div>
+    </div>
 
     <form id="todo-form" class="input-row">
       <input type="text" id="todo-input" placeholder="Yeni görev ekle..." autocomplete="off">
