@@ -1,0 +1,166 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 16px;
+}
+
+.app {
+  background: #fff;
+  width: 100%;
+  max-width: 480px;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  padding: 28px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 1.6rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.input-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+#todo-input {
+  flex: 1;
+  padding: 12px 14px;
+  border: 2px solid #e2e2e2;
+  border-radius: 10px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+#todo-input:focus {
+  border-color: #667eea;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  font-size: 0.95rem;
+}
+
+.input-row button {
+  background: #667eea;
+  color: #fff;
+  padding: 0 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.input-row button:hover {
+  background: #5568d3;
+}
+
+.filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.filter {
+  flex: 1;
+  padding: 8px;
+  background: #f1f1f4;
+  color: #555;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.filter.active {
+  background: #667eea;
+  color: #fff;
+}
+
+#todo-list {
+  list-style: none;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 10px;
+  border-bottom: 1px solid #eee;
+  animation: fade 0.2s ease;
+}
+
+@keyframes fade {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.todo-item input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #667eea;
+}
+
+.todo-item .text {
+  flex: 1;
+  word-break: break-word;
+  color: #333;
+}
+
+.todo-item.completed .text {
+  text-decoration: line-through;
+  color: #aaa;
+}
+
+.todo-item .delete {
+  background: transparent;
+  color: #e74c3c;
+  font-size: 1.2rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.todo-item .delete:hover {
+  opacity: 1;
+  background: #fdecea;
+}
+
+.empty {
+  text-align: center;
+  color: #aaa;
+  padding: 24px 0;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  font-size: 0.85rem;
+  color: #888;
+}
+
+#clear-completed {
+  background: transparent;
+  color: #888;
+  text-decoration: underline;
+}
+
+#clear-completed:hover {
+  color: #e74c3c;
+}
