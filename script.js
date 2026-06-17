@@ -1,3 +1,6 @@
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
 const form = document.getElementById("todo-form");
 const input = document.getElementById("todo-input");
 const list = document.getElementById("todo-list");
@@ -5,11 +8,29 @@ const countEl = document.getElementById("count");
 const clearBtn = document.getElementById("clear-completed");
 const filterBtns = document.querySelectorAll(".filter");
 
-let todos = JSON.parse(localStorage.getItem("todos") || "[]");
+let todos = [];
 let filter = "all";
 
-function save() {
-  localStorage.setItem("todos", JSON.stringify(todos));
+async function load() {
+  const { data, error } = await db
+    .from("todos")
+    .select("*")
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    showError(error.message);
+    return;
+  }
+  todos = data;
+  render();
+}
+
+function showError(msg) {
+  list.innerHTML = "";
+  const li = document.createElement("li");
+  li.className = "empty";
+  li.textContent = "⚠️ " + msg;
+  list.appendChild(li);
 }
 
 function render() {
@@ -35,7 +56,7 @@ function render() {
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.checked = todo.done;
-    checkbox.addEventListener("change", () => toggle(todo.id));
+    checkbox.addEventListener("change", () => toggle(todo));
 
     const span = document.createElement("span");
     span.className = "text";
@@ -54,21 +75,42 @@ function render() {
   countEl.textContent = `${remaining} görev kaldı`;
 }
 
-function addTodo(text) {
-  todos.push({ id: Date.now(), text, done: false });
-  save();
+async function addTodo(text) {
+  const { data, error } = await db
+    .from("todos")
+    .insert({ text })
+    .select()
+    .single();
+
+  if (error) return showError(error.message);
+  todos.push(data);
   render();
 }
 
-function toggle(id) {
-  todos = todos.map((t) => (t.id === id ? { ...t, done: !t.done } : t));
-  save();
+async function toggle(todo) {
+  const { data, error } = await db
+    .from("todos")
+    .update({ done: !todo.done })
+    .eq("id", todo.id)
+    .select()
+    .single();
+
+  if (error) return showError(error.message);
+  todos = todos.map((t) => (t.id === data.id ? data : t));
   render();
 }
 
-function remove(id) {
+async function remove(id) {
+  const { error } = await db.from("todos").delete().eq("id", id);
+  if (error) return showError(error.message);
   todos = todos.filter((t) => t.id !== id);
-  save();
+  render();
+}
+
+async function clearCompleted() {
+  const { error } = await db.from("todos").delete().eq("done", true);
+  if (error) return showError(error.message);
+  todos = todos.filter((t) => !t.done);
   render();
 }
 
@@ -81,11 +123,7 @@ form.addEventListener("submit", (e) => {
   input.focus();
 });
 
-clearBtn.addEventListener("click", () => {
-  todos = todos.filter((t) => !t.done);
-  save();
-  render();
-});
+clearBtn.addEventListener("click", clearCompleted);
 
 filterBtns.forEach((btn) => {
   btn.addEventListener("click", () => {
@@ -95,4 +133,4 @@ filterBtns.forEach((btn) => {
   });
 });
 
-render();
+load();
